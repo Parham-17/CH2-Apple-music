@@ -1,24 +1,13 @@
-//
-//  ContentView.swift
-//  AMHome
-//
-//  Created by Parham Kharbasi on 11/11/25.
-//
-
 import SwiftUI
 
+/// Root content view that hosts the main layout.
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        RootTabView()
     }
 }
 
 #Preview {
     ContentView()
+        .environmentObject(PlayerStore())
 }

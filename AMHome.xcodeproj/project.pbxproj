@@ -16,6 +16,11 @@
 			path = AMHome;
 			sourceTree = "<group>";
 		};
+		7DFD17112EC4130400EFBAE7 /* Other Tabs */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Other Tabs";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +37,7 @@
 		7DFD16BC2EC2CA1000EFBAE7 = {
 			isa = PBXGroup;
 			children = (
+				7DFD17112EC4130400EFBAE7 /* Other Tabs */,
 				7DFD16C72EC2CA1000EFBAE7 /* AMHome */,
 				7DFD16C62EC2CA1000EFBAE7 /* Products */,
 			);
@@ -62,6 +68,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				7DFD16C72EC2CA1000EFBAE7 /* AMHome */,
+				7DFD17112EC4130400EFBAE7 /* Other Tabs */,
 			);
 			name = AMHome;
 			packageProductDependencies = (
@@ -251,6 +258,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PRPH5X7Y2F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -282,6 +290,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PRPH5X7Y2F;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
