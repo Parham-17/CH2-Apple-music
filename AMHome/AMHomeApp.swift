@@ -6,11 +6,9 @@ struct AMHomeApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                HomeView()
-            }
-            .environmentObject(player)
-            .preferredColorScheme(.dark)
+            RootTabView()
+                .environmentObject(player)
+                .preferredColorScheme(.dark)
         }
     }
 }

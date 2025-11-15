@@ -1,51 +1,73 @@
 import SwiftUI
 
 struct RootTabView: View {
+    @EnvironmentObject private var player: PlayerStore
+    @State private var searchText: String = ""
+
     var body: some View {
         TabView {
+
             // MARK: Home
-            NavigationStack {
-                HomeView()
-            }
-            .tabItem {
-                Image(systemName: "house.fill")
-                Text("Home")
+            Tab("Home", systemImage: "house.fill") {
+                NavigationStack {
+                    HomeView()
+                }
             }
 
             // MARK: New
-            NavigationStack {
-                NewView()
-            }
-            .tabItem {
-                Image(systemName: "square.grid.2x2.fill")
-                Text("New")
+            Tab("New", systemImage: "square.grid.2x2.fill") {
+                NavigationStack {
+                    NewView()
+                }
             }
 
             // MARK: Radio
-            NavigationStack {
-                RadioView()
-            }
-            .tabItem {
-                Image(systemName: "dot.radiowaves.left.and.right")
-                Text("Radio")
+            Tab("Radio", systemImage: "dot.radiowaves.left.and.right") {
+                NavigationStack {
+                    RadioView()
+                }
             }
 
             // MARK: Library
-            NavigationStack {
-                LibraryView()
-            }
-            .tabItem {
-                Image(systemName: "music.note.list")
-                Text("Library")
+            Tab("Library", systemImage: "music.note.list") {
+                NavigationStack {
+                    LibraryView()
+                }
             }
 
-            // MARK: Search
-            NavigationStack {
-                SearchView()
+            // MARK: Search tab – **no custom label**
+            // System will turn this into the expanding search bar.
+            Tab(role: .search) {
+                NavigationStack {
+                    SearchView()
+                        .navigationTitle("Search")
+                }
             }
-            .tabItem {
-                Image(systemName: "magnifyingglass")
-                Text("Search")
+        }
+        // 🔍 Global search configuration for the tab bar
+        .searchable(
+            text: $searchText,
+            placement: .automatic,        // bottom on iPhone
+            prompt: "Apple Music"         // placeholder text in the bar
+        )
+        .searchToolbarBehavior(.minimize) // compact ↔ expanded behavior
+
+        // 🎵 Mini player above the tab bar
+        .tabViewBottomAccessory {
+            MiniPlayerBar()
+        }
+
+        // Collapses tab bar + accessory on scroll
+        .tabBarMinimizeBehavior(.onScrollDown)
+        .onAppear {
+            // Demo: ensure something is playing so mini player is visible
+            if player.nowPlaying == nil {
+                player.nowPlaying = MusicItem(
+                    title: "Radioactive",
+                    subtitle: "Imagine Dragons",
+                    artworkColor: .purple
+                )
+                player.isPlaying = true
             }
         }
     }
@@ -53,6 +75,16 @@ struct RootTabView: View {
 
 #Preview {
     RootTabView()
-        .environmentObject(PlayerStore())
+        .environmentObject({
+            let store = PlayerStore()
+            store.nowPlaying = MusicItem(
+                title: "Radioactive",
+                subtitle: "Imagine Dragons",
+                artworkColor: .purple
+            )
+            store.isPlaying = true
+            return store
+        }())
         .preferredColorScheme(.dark)
+        .tint(.red)
 }

@@ -1,17 +1,24 @@
 import SwiftUI
 
-/// Root content view that hosts the main layout.
+/// Root content view that hosts the main layout (for previews / playground).
 struct ContentView: View {
-    @StateObject private var player = PlayerStore()
-
     var body: some View {
         RootTabView()
-            .environmentObject(player)
     }
 }
 
 #Preview {
     ContentView()
-        .environmentObject(PlayerStore())
+        .environmentObject({
+            let store = PlayerStore()
+            // Demo track so the mini player shows in preview
+            store.nowPlaying = MusicItem(
+                title: "Radioactive",
+                subtitle: "Imagine Dragons",
+                artworkColor: .purple
+            )
+            store.isPlaying = true
+            return store
+        }())
         .preferredColorScheme(.dark)
 }

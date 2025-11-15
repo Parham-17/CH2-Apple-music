@@ -49,35 +49,48 @@ public struct AnimatedMusicCard: View {
 
     public var body: some View {
         ZStack(alignment: .topLeading) {
-            // Background
-            RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                .fill(.clear)
-                .background(
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .fill(.black.opacity(0.12))
-                        .overlay(
-                            AnimatedBackground(
-                                colors: colors,
-                                cornerRadius: cornerRadius,
-                                style: style,
-                                speed: speed,
-                                intensity: intensity,
-                                reduceMotion: reduceMotion
-                            )
-                            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-                        )
+
+            let shape = RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+
+            // MARK: - Unified background
+            shape
+                .fill(Color.black.opacity(0.16))
+                .overlay(
+                    AnimatedBackground(
+                        colors: colors,
+                        cornerRadius: cornerRadius,
+                        style: style,
+                        speed: speed,
+                        intensity: intensity,
+                        reduceMotion: reduceMotion
+                    )
+                    .clipShape(shape)
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                        .strokeBorder(.white.opacity(0.15), lineWidth: 0.8)
+                    LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: .clear,                    location: 0.0),
+                            .init(color: .clear,                    location: 0.35),
+                            .init(color: .black.opacity(0.25),      location: 0.75),
+                            .init(color: .black.opacity(0.70),      location: 1.0)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .clipShape(shape)
+                )
+                .overlay(
+                    shape
+                        .strokeBorder(Color.white.opacity(0.15), lineWidth: 0.8)
                 )
 
-            // Foreground content
+            // MARK: - Foreground content
             VStack(alignment: .leading, spacing: 10) {
                 HStack(spacing: 8) {
                     Circle()
                         .fill(prominentColor)
                         .frame(width: 8, height: 8)
+
                     Text("Music")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(.white.opacity(0.9))
@@ -159,19 +172,22 @@ private struct AnimatedBackground: View {
 
 // MARK: - Renderers (Canvas)
 
-// Shared light gloss overlay for depth
+// Shared gloss overlay
 private func gloss(ctx: inout GraphicsContext, size: CGSize) {
     let grad = Gradient(stops: [
         .init(color: .white.opacity(0.18), location: 0.0),
         .init(color: .white.opacity(0.05), location: 0.35),
-        .init(color: .clear, location: 1.0)
+        .init(color: .clear,             location: 1.0)
     ])
     let shading: GraphicsContext.Shading = .linearGradient(
         grad,
         startPoint: CGPoint(x: 0, y: 0),
         endPoint: CGPoint(x: 0, y: size.height)
     )
-    ctx.fill(Path(CGRect(x: 0, y: 0, width: size.width, height: size.height * 0.55)), with: shading)
+    ctx.fill(
+        Path(CGRect(x: 0, y: 0, width: size.width, height: size.height)),
+        with: shading
+    )
 }
 
 // 1) Blobs — drifting radial gradients
@@ -211,8 +227,7 @@ private struct BlobFieldCanvas: View {
                 )
             }
 
-            var mutableCtx = ctx
-            gloss(ctx: &mutableCtx, size: size)
+            // 🔥 NO gloss here for blobs → avoids the mid “edge” feeling
         }
     }
 }
@@ -380,4 +395,28 @@ private struct SparklesCanvas: View {
             gloss(ctx: &mutableCtx, size: size)
         }
     }
+}
+
+// MARK: - Preview
+
+#Preview {
+    ZStack {
+        Color.black.ignoresSafeArea()
+
+        AnimatedMusicCard(
+            title: "SHISH",
+            subtitle: "Mix",
+            footnote: "Portugal. The Man – 7 November",
+            colors: [.orange, .red, .purple, .pink],
+            prominentColor: .pink,
+            width: 320,
+            height: 320,
+            cornerRadius: 40,
+            style: .blobs,
+            speed: 0.35,
+            intensity: 1.0
+        )
+        .padding()
+    }
+    .preferredColorScheme(.dark)
 }

@@ -168,9 +168,12 @@ struct HomeView: View {
                 HorizontalRow(title: "2000s", items: twoThousands) { item in
                     player.play(item: item)
                 }
-                HorizontalRow(title: "Made for You", items: madeForYou) { item in
+
+                // MARK: Made for You – BIG wide cards (Replay-style)
+                MadeForYouRow(items: madeForYou) { item in
                     player.play(item: item)
                 }
+
                 HorizontalRow(title: "Workout", items: workout) { item in
                     player.play(item: item)
                 }
@@ -212,6 +215,75 @@ struct HomeView: View {
         case .yellow: return [.yellow, .orange, .pink, .red]
         case .indigo: return [.indigo, .purple, .pink, .blue]
         default:      return [.purple, .pink, .indigo, .blue]
+        }
+    }
+}
+
+// MARK: - BIG Made For You row (Replay-style cards)
+
+private struct MadeForYouRow: View {
+    let items: [MusicItem]
+    let onTap: (MusicItem) -> Void
+
+    // Card size similar to Apple Music Replay
+    private var cardWidth: CGFloat {
+        UIScreen.main.bounds.width - 48   // nice side padding
+    }
+    private let cardHeight: CGFloat = 260
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Made for You")
+                .font(.title2.bold())
+                .foregroundColor(.white)
+                .padding(.horizontal)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 16) {
+                    ForEach(items) { item in
+                        Button {
+                            onTap(item)
+                        } label: {
+                            ZStack(alignment: .bottomLeading) {
+                                // Background block
+                                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                                    .fill(item.artworkColor)
+                                    .frame(width: cardWidth, height: cardHeight)
+                                    .overlay(
+                                        // slight vertical gradient for depth / legibility
+                                        LinearGradient(
+                                            colors: [
+                                                Color.black.opacity(0.0),
+                                                Color.black.opacity(0.15),
+                                                Color.black.opacity(0.35)
+                                            ],
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                    )
+
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(item.title)
+                                        .font(.title.bold())
+                                        .foregroundColor(.white)
+                                        .lineLimit(1)
+
+                                    Text(item.subtitle)
+                                        .font(.headline)
+                                        .foregroundColor(.white.opacity(0.9))
+                                        .lineLimit(1)
+                                }
+                                .padding(.horizontal, 18)
+                                .padding(.bottom, 16)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                        .shadow(color: .black.opacity(0.35), radius: 18, x: 0, y: 8)
+                    }
+                }
+                .padding(.vertical, 6)
+                .padding(.horizontal)
+            }
         }
     }
 }

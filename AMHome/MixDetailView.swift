@@ -6,9 +6,9 @@ struct MixDetailView: View {
     @EnvironmentObject private var player: PlayerStore
     @Environment(\.dismiss) private var dismiss
 
-    // Fake track list for now – you can replace with real data later
+    // Fake tracks for now
     private var tracks: [MusicItem] {
-        (1...15).map { index in
+        (1...20).map { index in
             MusicItem(
                 title: "Track \(index)",
                 subtitle: "Apple Music for Parham",
@@ -18,97 +18,121 @@ struct MixDetailView: View {
     }
 
     var body: some View {
-        ZStack {
-            // 🔥 FULLSCREEN ANIMATED BACKGROUND (blurred)
-            AnimatedMusicCard(
-                title: "",
-                subtitle: "",
-                footnote: "",
-                colors: palette(for: mix.artworkColor),
-                prominentColor: mix.artworkColor,
-                width: UIScreen.main.bounds.width,
-                height: UIScreen.main.bounds.height * 0.9,
-                cornerRadius: 80,
-                style: .blobs
-            )
-            .scaleEffect(1.45)     // fill everything
-            .blur(radius: 35)      // remove card look
-            .opacity(0.85)
-            .ignoresSafeArea()
+        GeometryReader { geo in
+            // Use the SCREEN height so hero size is consistent
+            // (both in preview and when opened from ContentView).
+            let screenHeight = UIScreen.main.bounds.height
+            let heroHeight = screenHeight * 0.75   // big hero (≈ 3/4+)
 
-            // Slight dark overlay for readability
-            Color.black.opacity(0.45)
-                .ignoresSafeArea()
+            ZStack {
+                Color.black.ignoresSafeArea()
 
-            // CONTENT
-            ScrollView(.vertical, showsIndicators: true) {
-                VStack(alignment: .leading, spacing: 24) {
+                ScrollView(.vertical, showsIndicators: true) {
+                    VStack(spacing: 0) {
 
-                    // MARK: Title section – roughly center-ish
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(mix.title)
-                            .font(.system(size: 38, weight: .bold))
-                            .foregroundColor(.white)
+                        // MARK: - HERO (animated, scrolls with content)
+                        ZStack {
+                            // Animated gradient background
+                            AnimatedMusicCard(
+                                title: "",
+                                subtitle: "",
+                                footnote: "",
+                                colors: palette(for: mix.artworkColor),
+                                prominentColor: mix.artworkColor,
+                                width: geo.size.width,
+                                height: heroHeight + 200,   // overshoot to avoid hard edge
+                                cornerRadius: 80,
+                                style: .blobs
+                            )
+                            .scaleEffect(1.5)
+                            .blur(radius: 40)
+                            .opacity(0.95)
+                            .ignoresSafeArea(edges: .top)
 
-                        Text("Apple Music for Parham")
-                            .font(.title3.weight(.semibold))
-                            .foregroundStyle(.white.opacity(0.95))
+                            // Darken bottom so text is readable
+                            LinearGradient(
+                                colors: [
+                                    .clear,
+                                    .clear,
+                                    .black.opacity(0.25),
+                                    .black.opacity(0.8)
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
 
-                        Text("Updated 6 hr ago")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.top, 80)   // moves it down like real Apple Music
-                    .padding(.horizontal, 20)
+                            // MARK: - Title Block + Buttons (centered)
+                            VStack(alignment: .center, spacing: 8) {
+                                Text(mix.title)
+                                    .font(.system(size: 25, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .multilineTextAlignment(.center)
 
-                    // MARK: Play / Shuffle buttons
-                    HStack(spacing: 14) {
-                        Button {
-                            if let first = tracks.first {
-                                player.play(item: first)
+                                Text("Apple Music for Parham")
+                                    .font(.title3)
+                                    .foregroundColor(.white.opacity(0.95))
+                                    .multilineTextAlignment(.center)
+
+                                Text("Updated 6 hr ago")
+                                    .font(.caption)
+                                    .foregroundColor(.white.opacity(0.65))
+                                    .multilineTextAlignment(.center)
+
+                                // MARK: - Play / Shuffle buttons
+                                HStack(spacing: 14) {
+                                    // PLAY BUTTON
+                                    Button {
+                                        player.play(item: mix)
+                                    } label: {
+                                        HStack(spacing: 6) {
+                                            Image(systemName: "play.fill")
+                                            Text("Play")
+                                        }
+                                        .font(.headline)
+                                        .frame(width: 150, height: 50)
+                                        .background(Color.white)
+                                        .foregroundColor(.black)
+                                        .clipShape(Capsule())
+                                    }
+                                    .buttonStyle(.plain)
+
+                                    // SHUFFLE BUTTON
+                                    Button {
+                                        // shuffle logic
+                                    } label: {
+                                        HStack(spacing: 6) {
+                                            Image(systemName: "shuffle")
+                                            Text("Shuffle")
+                                        }
+                                        .font(.headline)
+                                        .frame(width: 150, height: 50)            // SAME SIZE + BIGGER
+                                        .background(Color.white.opacity(0.12))
+                                        .foregroundColor(.white)
+                                        .overlay(
+                                            Capsule()
+                                                .stroke(Color.white.opacity(0.7), lineWidth: 1)
+                                        )
+                                        .clipShape(Capsule())
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                .padding(.top, 20)
+
                             }
-                        } label: {
-                            Text("Play")
-                                .font(.headline.bold())
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 12)
+                            .padding(.horizontal, 24)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                            .offset(y: -150)   // your working offset
                         }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.white.opacity(0.95))
-                        .foregroundColor(.black)
-                        .clipShape(Capsule())
+                        .frame(height: heroHeight)
+                        .clipped()
 
-                        Button {
-                            if let random = tracks.randomElement() {
-                                player.play(item: random)
-                            }
-                        } label: {
-                            HStack(spacing: 6) {
-                                Image(systemName: "shuffle")
-                                Text("Shuffle")
-                            }
-                            .font(.headline.bold())
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.white.opacity(0.9))
-                        .foregroundColor(.black)
-                        .clipShape(Capsule())
-                    }
-                    .padding(.horizontal, 20)
-
-                    // MARK: Track list – with solid dark background
-                    VStack(alignment: .leading, spacing: 0) {
-                        ForEach(Array(tracks.enumerated()), id: \.offset) { index, track in
-                            Button {
-                                player.play(item: track)
-                            } label: {
+                        // MARK: - TRACK LIST
+                        VStack(spacing: 0) {
+                            ForEach(Array(tracks.enumerated()), id: \.offset) { index, track in
                                 HStack(spacing: 14) {
                                     Text("\(index + 1)")
-                                        .frame(width: 24, alignment: .trailing)
-                                        .foregroundStyle(.secondary)
+                                        .frame(width: 26, alignment: .trailing)
+                                        .foregroundColor(.secondary)
 
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(track.title)
@@ -116,75 +140,60 @@ struct MixDetailView: View {
                                             .lineLimit(1)
                                         Text(track.subtitle)
                                             .font(.caption)
-                                            .foregroundStyle(.secondary)
+                                            .foregroundColor(.secondary)
                                     }
 
                                     Spacer()
 
                                     Image(systemName: "ellipsis")
-                                        .foregroundStyle(.secondary)
+                                        .foregroundColor(.secondary)
                                 }
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 10)
-                            }
-                            .buttonStyle(.plain)
 
-                            if index != tracks.count - 1 {
-                                Divider()
-                                    .overlay(Color.white.opacity(0.15))
-                                    .padding(.leading, 44)
+                                if index != tracks.count - 1 {
+                                    Divider()
+                                        .overlay(Color.white.opacity(0.15))
+                                        .padding(.leading, 50)
+                                }
                             }
                         }
+                        .background(Color.black)
                     }
-                    .background(Color.black.opacity(0.80)) // solid list background
-
-                    Spacer(minLength: 40)
                 }
+                // Let content go under the top toolbar (no empty strip)
+                .ignoresSafeArea(edges: .top)
             }
         }
+        .navigationTitle("")
         .navigationBarBackButtonHidden(true)
+        // MARK: - Liquid Glass toolbar layer
         .toolbar {
-            // Back button
             ToolbarItem(placement: .topBarLeading) {
                 Button {
                     dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
-                        .font(.title2.weight(.semibold))
-                        .padding(10)
-                        .background(
-                            Circle().fill(.ultraThinMaterial)
-                        )
                 }
             }
 
-            // Plus + more buttons on the right
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
                     // add to library
                 } label: {
                     Image(systemName: "plus")
-                        .font(.title3.weight(.semibold))
-                        .padding(10)
-                        .background(
-                            Capsule().fill(.ultraThinMaterial)
-                        )
                 }
 
                 Button {
                     // more actions
                 } label: {
                     Image(systemName: "ellipsis")
-                        .font(.title3.weight(.semibold))
-                        .padding(10)
-                        .background(
-                            Capsule().fill(.ultraThinMaterial)
-                        )
                 }
             }
         }
     }
 
+    // MARK: - Gradient palette helper
     private func palette(for color: Color) -> [Color] {
         switch color {
         case .red:    return [.red, .orange, .pink, .purple]
@@ -203,13 +212,12 @@ struct MixDetailView: View {
     NavigationStack {
         MixDetailView(
             mix: MusicItem(
-                title: "Heavy Rotation",
+                title: "Heavy Rotation Mix",
                 subtitle: "Apple Music for Parham",
-                artworkColor: .orange
+                artworkColor: .purple
             )
         )
         .environmentObject(PlayerStore())
     }
     .preferredColorScheme(.dark)
 }
-
