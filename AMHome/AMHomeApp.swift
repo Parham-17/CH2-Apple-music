@@ -2,14 +2,15 @@ import SwiftUI
 
 @main
 struct AMHomeApp: App {
-
-    @StateObject private var playerStore = PlayerStore()
+    @StateObject private var player = PlayerStore()
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(playerStore)
-                .preferredColorScheme(.dark)
+            NavigationStack {
+                HomeView()
+            }
+            .environmentObject(player)
+            .preferredColorScheme(.dark)
         }
     }
 }

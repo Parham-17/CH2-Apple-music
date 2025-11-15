@@ -1,62 +1,58 @@
 import SwiftUI
 
 struct RootTabView: View {
-
-    @EnvironmentObject private var player: PlayerStore
-    @State private var searchText: String = ""
-
     var body: some View {
         TabView {
-            // Home
-            Tab("Home", systemImage: "house.fill") {
+            // MARK: Home
+            NavigationStack {
                 HomeView()
             }
+            .tabItem {
+                Image(systemName: "house.fill")
+                Text("Home")
+            }
 
-            // New
-            Tab("New", systemImage: "square.grid.2x2.fill") {
+            // MARK: New
+            NavigationStack {
                 NewView()
             }
+            .tabItem {
+                Image(systemName: "square.grid.2x2.fill")
+                Text("New")
+            }
 
-            // Radio
-            Tab("Radio", systemImage: "dot.radiowaves.left.and.right") {
+            // MARK: Radio
+            NavigationStack {
                 RadioView()
             }
+            .tabItem {
+                Image(systemName: "dot.radiowaves.left.and.right")
+                Text("Radio")
+            }
 
-            // Library
-            Tab("Library", systemImage: "music.note.list") {
+            // MARK: Library
+            NavigationStack {
                 LibraryView()
             }
+            .tabItem {
+                Image(systemName: "music.note.list")
+                Text("Library")
+            }
 
-            // Search — system renders as separated search item
-            Tab(role: .search) {
-                NavigationStack {
-                    SearchView()
-                        .navigationTitle("Search")
-                }
+            // MARK: Search
+            NavigationStack {
+                SearchView()
+            }
+            .tabItem {
+                Image(systemName: "magnifyingglass")
+                Text("Search")
             }
         }
-        .preferredColorScheme(.dark)
-
-        .searchable(text: $searchText)
-        .tabBarMinimizeBehavior(.onScrollDown)
-
-        // Native bottom accessory: mini player
-        .tabViewBottomAccessory {
-            if let now = player.nowPlaying {
-                MiniPlayerView(nowPlaying: now)
-                    .environmentObject(player)
-                    .padding(.horizontal, 12)
-                    .padding(.bottom, 4)
-//                    .environment(\.colorScheme, .dark)
-
-            }
-        }
-
-        .background(Color.black.ignoresSafeArea())
     }
 }
 
 #Preview {
     RootTabView()
         .environmentObject(PlayerStore())
+        .preferredColorScheme(.dark)
 }

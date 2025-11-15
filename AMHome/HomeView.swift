@@ -3,176 +3,249 @@ import SwiftUI
 struct HomeView: View {
 
     @EnvironmentObject private var player: PlayerStore
+    @State private var showAccount = false
 
+    // MARK: Data
     private let topPicks: [MusicItem] = [
-        MusicItem(title: "SHISH",            subtitle: "Portugal. The Man – 7 November", artworkColor: .red),
-        MusicItem(title: "Parham Mix",       subtitle: "Made for You",                   artworkColor: .pink),
-        MusicItem(title: "Late Night Vibes", subtitle: "Playlist",                       artworkColor: .blue)
+        MusicItem(title: "SHISH",
+                  subtitle: "Portugal. The Man – 7 November",
+                  artworkColor: .red),
+        MusicItem(title: "Parham Mix",
+                  subtitle: "Made for You",
+                  artworkColor: .pink),
+        MusicItem(title: "Late Night Vibes",
+                  subtitle: "Playlist",
+                  artworkColor: .blue),
+        MusicItem(title: "Focus Now",
+                  subtitle: "Instrumental Beats",
+                  artworkColor: .teal)
     ]
 
     private let recentlyPlayed: [MusicItem] = [
-        MusicItem(title: "Energy",           subtitle: "Radio Station",        artworkColor: .green),
-        MusicItem(title: "Feel Good",        subtitle: "Radio Station",        artworkColor: .yellow),
-        MusicItem(title: "Parham Radio",     subtitle: "Radio Station",        artworkColor: .orange),
-        MusicItem(title: "Chill Beats",      subtitle: "Playlist",             artworkColor: .purple)
+        MusicItem(title: "Energy",       subtitle: "Radio Station", artworkColor: .green),
+        MusicItem(title: "Feel Good",    subtitle: "Radio Station", artworkColor: .yellow),
+        MusicItem(title: "Parham Radio", subtitle: "Radio Station", artworkColor: .orange),
+        MusicItem(title: "Chill Beats",  subtitle: "Playlist",      artworkColor: .purple),
+        MusicItem(title: "Lo-Fi Coding", subtitle: "Playlist",      artworkColor: .mint),
+        MusicItem(title: "Retro Wave",   subtitle: "Playlist",      artworkColor: .indigo)
     ]
 
     private let twoThousands: [MusicItem] = [
-        MusicItem(title: "Leaving Eden",         subtitle: "Antimatter",        artworkColor: .blue),
-        MusicItem(title: "Late Goodbye - EP",    subtitle: "Poets of the Fall", artworkColor: .brown),
-        MusicItem(title: "Don’t Panic",          subtitle: "Coldplay",          artworkColor: .teal),
-        MusicItem(title: "Hybrid Theory",        subtitle: "Linkin Park",       artworkColor: .gray),
-        MusicItem(title: "American Idiot",       subtitle: "Green Day",         artworkColor: .green),
-        MusicItem(title: "Songs About Jane",     subtitle: "Maroon 5",          artworkColor: .red)
+        MusicItem(title: "Leaving Eden",      subtitle: "Antimatter",        artworkColor: .blue),
+        MusicItem(title: "Late Goodbye - EP", subtitle: "Poets of the Fall", artworkColor: .brown),
+        MusicItem(title: "Don’t Panic",       subtitle: "Coldplay",          artworkColor: .teal),
+        MusicItem(title: "Hybrid Theory",     subtitle: "Linkin Park",       artworkColor: .gray),
+        MusicItem(title: "American Idiot",    subtitle: "Green Day",         artworkColor: .green),
+        MusicItem(title: "Songs About Jane",  subtitle: "Maroon 5",          artworkColor: .red)
+    ]
+
+    private let madeForYou: [MusicItem] = [
+        MusicItem(title: "Parham Mix",      subtitle: "Personal Mix", artworkColor: .pink),
+        MusicItem(title: "Discover Weekly", subtitle: "New for You",  artworkColor: .purple),
+        MusicItem(title: "Daily Drive",     subtitle: "Music + News", artworkColor: .orange),
+        MusicItem(title: "Chilled Keys",    subtitle: "Instrumental", artworkColor: .teal),
+        MusicItem(title: "90s Rewind",      subtitle: "Throwback",    artworkColor: .yellow)
+    ]
+
+    private let workout: [MusicItem] = [
+        MusicItem(title: "Beast Mode",   subtitle: "Workout Mix", artworkColor: .red),
+        MusicItem(title: "HIIT Heat",    subtitle: "Up-tempo",    artworkColor: .orange),
+        MusicItem(title: "Run Faster",   subtitle: "BPM 170+",    artworkColor: .green),
+        MusicItem(title: "Pump It Up",   subtitle: "EDM",         artworkColor: .blue),
+        MusicItem(title: "Gym Classics", subtitle: "Throwback",   artworkColor: .indigo)
+    ]
+
+    private let chill: [MusicItem] = [
+        MusicItem(title: "Ocean Waves",  subtitle: "Ambient",      artworkColor: .cyan),
+        MusicItem(title: "Night City",   subtitle: "Chillhop",     artworkColor: .purple),
+        MusicItem(title: "Midnight Tea", subtitle: "Calm",         artworkColor: .mint),
+        MusicItem(title: "Deep Focus",   subtitle: "No Lyrics",    artworkColor: .gray),
+        MusicItem(title: "Quiet Piano",  subtitle: "Instrumental", artworkColor: .brown)
+    ]
+
+    private let jazz: [MusicItem] = [
+        MusicItem(title: "Blue Note",   subtitle: "Classic Jazz", artworkColor: .blue),
+        MusicItem(title: "Late Night",  subtitle: "Smooth",       artworkColor: .indigo),
+        MusicItem(title: "Café Swing",  subtitle: "1930s-50s",    artworkColor: .orange),
+        MusicItem(title: "Modern Jazz", subtitle: "Fresh",        artworkColor: .green),
+        MusicItem(title: "Sax Stories", subtitle: "Instrumental", artworkColor: .yellow)
+    ]
+
+    private let pop: [MusicItem] = [
+        MusicItem(title: "Today’s Hits", subtitle: "Pop",       artworkColor: .pink),
+        MusicItem(title: "Viral 50",     subtitle: "Trending",  artworkColor: .red),
+        MusicItem(title: "Future Pop",   subtitle: "Fresh",     artworkColor: .purple),
+        MusicItem(title: "Teen Party",   subtitle: "Fun",       artworkColor: .yellow),
+        MusicItem(title: "Electro Pop",  subtitle: "Synth",     artworkColor: .teal)
+    ]
+
+    private let metal: [MusicItem] = [
+        MusicItem(title: "Energy Metal",  subtitle: "Workout",   artworkColor: .green),
+        MusicItem(title: "Classic Metal", subtitle: "Legends",   artworkColor: .gray),
+        MusicItem(title: "Prog Assault",  subtitle: "Prog",      artworkColor: .blue),
+        MusicItem(title: "Nordic Fire",   subtitle: "Viking",    artworkColor: .brown),
+        MusicItem(title: "Core Crash",    subtitle: "Metalcore", artworkColor: .red)
     ]
 
     var body: some View {
-        NavigationStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 24) {
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(alignment: .leading, spacing: 24) {
 
-                    // Home header
-                    HStack {
-                        Text("Home")
-                            .font(.system(size: 34, weight: .bold))
-                            .foregroundColor(.white)
-                        Spacer()
-                        NavigationLink {
-                            AccountView()
-                        } label: {
-                            ZStack {
-                                Circle()
-                                    .fill(
-                                        LinearGradient(colors: [.pink, .orange],
-                                                       startPoint: .topLeading,
-                                                       endPoint: .bottomTrailing)
+                // MARK: Header
+                HStack {
+                    Text("Home")
+                        .font(.system(size: 34, weight: .bold))
+                        .foregroundColor(.white)
+
+                    Spacer()
+
+                    Button {
+                        showAccount = true
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(
+                                    LinearGradient(
+                                        colors: [.pink, .orange],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
                                     )
-                                    .frame(width: 36, height: 36)
-                                Text("P")
-                                    .font(.headline.bold())
-                                    .foregroundColor(.white)
-                            }
+                                )
+                                .frame(width: 36, height: 36)
+
+                            Text("P")
+                                .font(.headline.bold())
+                                .foregroundColor(.white)
                         }
                     }
-                    .padding(.horizontal)
-                    .padding(.top, 12)
+                    .buttonStyle(.plain)
+                }
+                .padding(.horizontal)
+                .padding(.top, 12)
 
-                    // Top Picks for You
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Top Picks for You")
-                            .font(.title2.bold())
-                            .foregroundColor(.white)
-
-                        Text("New Release")
-                            .font(.headline)
-                            .foregroundStyle(.secondary)
-
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 16) {
-                                ForEach(topPicks) { item in
-                                    TopPickCard(item: item) {
-                                        player.play(item: item)
-                                    }
-                                }
-                            }
-                            .padding(.vertical, 4)
-                            .padding(.horizontal)
-                        }
-                    }
-
-                    // Recently Played
-                    VStack(alignment: .leading, spacing: 8) {
-                        NavigationLink {
-                            RecentlyPlayedListView(items: recentlyPlayed)
-                        } label: {
-                            HStack {
-                                Text("Recently Played")
-                                    .font(.title2.bold())
-                                    .foregroundColor(.white)
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-                        .buttonStyle(.plain)
+                // MARK: Top Picks – animated cards (blobs style)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Top Picks for You")
+                        .font(.title2.bold())
+                        .foregroundColor(.white)
                         .padding(.horizontal)
 
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 16) {
-                                ForEach(recentlyPlayed) { item in
-                                    SquareAlbumItemView(item: item) {
-                                        player.play(item: item)
-                                    }
+                    Text("New Release")
+                        .font(.headline)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(topPicks) { item in
+                                NavigationLink {
+                                    MixDetailView(mix: item)
+                                } label: {
+                                    AnimatedMusicCard(
+                                        title: item.title,
+                                        subtitle: "Mix",
+                                        footnote: item.subtitle,
+                                        colors: palette(for: item.artworkColor),
+                                        prominentColor: item.artworkColor,
+                                        width: 300,
+                                        height: 300,
+                                        cornerRadius: 26,
+                                        style: .blobs
+                                    )
                                 }
+                                .buttonStyle(.plain)
                             }
-                            .padding(.vertical, 4)
-                            .padding(.horizontal)
                         }
+                        .padding(.vertical, 4)
+                        .padding(.horizontal)
                     }
-
-                    // 2000s — same style as Recently Played
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("2000s")
-                            .font(.title2.bold())
-                            .foregroundColor(.white)
-                            .padding(.horizontal)
-
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 16) {
-                                ForEach(twoThousands) { item in
-                                    SquareAlbumItemView(item: item) {
-                                        player.play(item: item)
-                                    }
-                                }
-                            }
-                            .padding(.vertical, 4)
-                            .padding(.horizontal)
-                        }
-                    }
-
-                    Spacer(minLength: 40)
                 }
+
+                // MARK: Horizontal rows
+                HorizontalRow(title: "Recently Played", items: recentlyPlayed) { item in
+                    player.play(item: item)
+                }
+                HorizontalRow(title: "2000s", items: twoThousands) { item in
+                    player.play(item: item)
+                }
+                HorizontalRow(title: "Made for You", items: madeForYou) { item in
+                    player.play(item: item)
+                }
+                HorizontalRow(title: "Workout", items: workout) { item in
+                    player.play(item: item)
+                }
+                HorizontalRow(title: "Chill", items: chill) { item in
+                    player.play(item: item)
+                }
+                HorizontalRow(title: "Jazz", items: jazz) { item in
+                    player.play(item: item)
+                }
+                HorizontalRow(title: "Pop", items: pop) { item in
+                    player.play(item: item)
+                }
+                HorizontalRow(title: "Metal", items: metal) { item in
+                    player.play(item: item)
+                }
+
+                Spacer(minLength: 44)
             }
-            .background(Color.black.ignoresSafeArea())
+        }
+        .background(Color.black.ignoresSafeArea())
+        .sheet(isPresented: $showAccount) {
+            AccountSheetView()
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
+                .presentationCornerRadius(32)
+                .presentationBackground(.clear)
+        }
+    }
+
+    // MARK: - Gradient palette for animated cards
+
+    private func palette(for color: Color) -> [Color] {
+        switch color {
+        case .red:    return [.red, .orange, .pink, .purple]
+        case .pink:   return [.pink, .purple, .indigo, .blue]
+        case .blue:   return [.blue, .teal, .mint, .cyan]
+        case .teal:   return [.teal, .mint, .blue, .indigo]
+        case .green:  return [.green, .teal, .mint, .yellow]
+        case .yellow: return [.yellow, .orange, .pink, .red]
+        case .indigo: return [.indigo, .purple, .pink, .blue]
+        default:      return [.purple, .pink, .indigo, .blue]
         }
     }
 }
 
-// MARK: - Card Components
+// MARK: - Reusable horizontal row
 
-struct TopPickCard: View {
-    let item: MusicItem
-    let onTap: () -> Void
+private struct HorizontalRow: View {
+    let title: String
+    let items: [MusicItem]
+    let onTap: (MusicItem) -> Void
 
     var body: some View {
-        Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 6) {
-                RoundedRectangle(cornerRadius: 18)
-                    .fill(item.artworkColor)
-                    .frame(width: 260, height: 260)
-                    .overlay(
-                        Text(item.title)
-                            .font(.system(size: 32, weight: .heavy, design: .rounded))
-                            .multilineTextAlignment(.center)
-                            .padding()
-                    )
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.title2.bold())
+                .foregroundColor(.white)
+                .padding(.horizontal)
 
-                Text(item.title)
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .lineLimit(1)
-
-                Text(item.subtitle)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 16) {
+                    ForEach(items) { item in
+                        SquareAlbumItemView(item: item) {
+                            onTap(item)
+                        }
+                    }
+                }
+                .padding(.vertical, 4)
+                .padding(.horizontal)
             }
-            .frame(width: 260, alignment: .leading)
         }
-        .buttonStyle(.plain)
     }
 }
+
+// MARK: - Square album card
 
 struct SquareAlbumItemView: View {
     let item: MusicItem
@@ -202,6 +275,9 @@ struct SquareAlbumItemView: View {
 }
 
 #Preview {
-    HomeView()
-        .environmentObject(PlayerStore())
+    NavigationStack {
+        HomeView()
+            .environmentObject(PlayerStore())
+    }
+    .preferredColorScheme(.dark)
 }
