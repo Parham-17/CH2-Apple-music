@@ -10,7 +10,7 @@ struct HomeView: View {
         MusicItem(title: "SHISH",
                   subtitle: "Portugal. The Man – 7 November",
                   artworkColor: .red),
-        MusicItem(title: "Parham Mix",
+        MusicItem(title: "Parham's Station",
                   subtitle: "Made for You",
                   artworkColor: .pink),
         MusicItem(title: "Late Night Vibes",
@@ -22,12 +22,12 @@ struct HomeView: View {
     ]
 
     private let recentlyPlayed: [MusicItem] = [
-        MusicItem(title: "Energy",       subtitle: "Radio Station", artworkColor: .green),
+        MusicItem(title: "Energy",       subtitle: "Radio Station", artworkColor: .indigo),
         MusicItem(title: "Feel Good",    subtitle: "Radio Station", artworkColor: .yellow),
         MusicItem(title: "Parham Radio", subtitle: "Radio Station", artworkColor: .orange),
         MusicItem(title: "Chill Beats",  subtitle: "Playlist",      artworkColor: .purple),
         MusicItem(title: "Lo-Fi Coding", subtitle: "Playlist",      artworkColor: .mint),
-        MusicItem(title: "Retro Wave",   subtitle: "Playlist",      artworkColor: .indigo)
+        MusicItem(title: "Retro Wave",   subtitle: "Playlist",      artworkColor: .green)
     ]
 
     private let twoThousands: [MusicItem] = [
@@ -39,12 +39,12 @@ struct HomeView: View {
         MusicItem(title: "Songs About Jane",  subtitle: "Maroon 5",          artworkColor: .red)
     ]
 
-    private let madeForYou: [MusicItem] = [
-        MusicItem(title: "Parham Mix",      subtitle: "Personal Mix", artworkColor: .pink),
-        MusicItem(title: "Discover Weekly", subtitle: "New for You",  artworkColor: .purple),
-        MusicItem(title: "Daily Drive",     subtitle: "Music + News", artworkColor: .orange),
-        MusicItem(title: "Chilled Keys",    subtitle: "Instrumental", artworkColor: .teal),
-        MusicItem(title: "90s Rewind",      subtitle: "Throwback",    artworkColor: .yellow)
+    private let replay: [MusicItem] = [
+        MusicItem(title: "All Time",      subtitle: "Dorcci , Future , Antimatter , A$AP , Travis Scott and more", artworkColor: .pink),
+        MusicItem(title: "'24", subtitle: "Blackfield , Coldplay , Linkin Park , Maroon 5 and more",  artworkColor: .purple),
+        MusicItem(title: "'23",     subtitle: "Leprous , Tamino , Khalid , Billie Eilish , Halsey and more", artworkColor: .orange),
+        MusicItem(title: "'22",    subtitle: " Lord Huron , The Weeknd , Angus & Julia Stone and more", artworkColor: .teal),
+        MusicItem(title: "'21",      subtitle: "Slipknot , Cranberries , Poobon , UFO , Offset and more",    artworkColor: .yellow)
     ]
 
     private let workout: [MusicItem] = [
@@ -106,7 +106,7 @@ struct HomeView: View {
                             Circle()
                                 .fill(
                                     LinearGradient(
-                                        colors: [.pink, .orange],
+                                        colors: [.pink, .blue],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     )
@@ -143,12 +143,12 @@ struct HomeView: View {
                                 } label: {
                                     AnimatedMusicCard(
                                         title: item.title,
-                                        subtitle: "Mix",
+                                        subtitle: "",
                                         footnote: item.subtitle,
                                         colors: palette(for: item.artworkColor),
                                         prominentColor: item.artworkColor,
-                                        width: 300,
-                                        height: 300,
+                                        width: 260,
+                                        height: 320,
                                         cornerRadius: 26,
                                         style: .blobs
                                     )
@@ -161,17 +161,38 @@ struct HomeView: View {
                     }
                 }
 
-                // MARK: Horizontal rows
+                // MARK: Horizontal rows (small square cards)
+
                 HorizontalRow(title: "Recently Played", items: recentlyPlayed) { item in
                     player.play(item: item)
                 }
+
                 HorizontalRow(title: "2000s", items: twoThousands) { item in
                     player.play(item: item)
                 }
 
-                // MARK: Made for You – BIG wide cards (Replay-style)
-                MadeForYouRow(items: madeForYou) { item in
-                    player.play(item: item)
+                // MARK: Made for You – uses OrganicMixCardView
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Replay: Your Top Music")
+                        .font(.title2.bold())
+                        .foregroundColor(.white)
+                        .padding(.horizontal)
+
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(replay) { item in
+                                NavigationLink {
+                                    MixDetailView(mix: item)
+                                } label: {
+                                    OrganicMixCardView(item: item)
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                        .padding(.horizontal)
+                    }
                 }
 
                 HorizontalRow(title: "Workout", items: workout) { item in
@@ -215,75 +236,6 @@ struct HomeView: View {
         case .yellow: return [.yellow, .orange, .pink, .red]
         case .indigo: return [.indigo, .purple, .pink, .blue]
         default:      return [.purple, .pink, .indigo, .blue]
-        }
-    }
-}
-
-// MARK: - BIG Made For You row (Replay-style cards)
-
-private struct MadeForYouRow: View {
-    let items: [MusicItem]
-    let onTap: (MusicItem) -> Void
-
-    // Card size similar to Apple Music Replay
-    private var cardWidth: CGFloat {
-        UIScreen.main.bounds.width - 48   // nice side padding
-    }
-    private let cardHeight: CGFloat = 260
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Made for You")
-                .font(.title2.bold())
-                .foregroundColor(.white)
-                .padding(.horizontal)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(items) { item in
-                        Button {
-                            onTap(item)
-                        } label: {
-                            ZStack(alignment: .bottomLeading) {
-                                // Background block
-                                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                    .fill(item.artworkColor)
-                                    .frame(width: cardWidth, height: cardHeight)
-                                    .overlay(
-                                        // slight vertical gradient for depth / legibility
-                                        LinearGradient(
-                                            colors: [
-                                                Color.black.opacity(0.0),
-                                                Color.black.opacity(0.15),
-                                                Color.black.opacity(0.35)
-                                            ],
-                                            startPoint: .top,
-                                            endPoint: .bottom
-                                        )
-                                    )
-
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(item.title)
-                                        .font(.title.bold())
-                                        .foregroundColor(.white)
-                                        .lineLimit(1)
-
-                                    Text(item.subtitle)
-                                        .font(.headline)
-                                        .foregroundColor(.white.opacity(0.9))
-                                        .lineLimit(1)
-                                }
-                                .padding(.horizontal, 18)
-                                .padding(.bottom, 16)
-                            }
-                        }
-                        .buttonStyle(.plain)
-                        .shadow(color: .black.opacity(0.35), radius: 18, x: 0, y: 8)
-                    }
-                }
-                .padding(.vertical, 6)
-                .padding(.horizontal)
-            }
         }
     }
 }

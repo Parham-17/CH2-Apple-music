@@ -12,8 +12,8 @@ public struct AnimatedMusicCard: View {
     public let footnote: String
     public let colors: [Color]
     public let prominentColor: Color
-    public var width: CGFloat = 300
-    public var height: CGFloat = 300
+    public var width: CGFloat = 260
+    public var height: CGFloat = 320
     public var cornerRadius: CGFloat = 26
     public var style: CardAnimationStyle = .blobs
     public var speed: Double = 0.35      // global motion speed
@@ -27,8 +27,8 @@ public struct AnimatedMusicCard: View {
         footnote: String,
         colors: [Color],
         prominentColor: Color,
-        width: CGFloat = 300,
-        height: CGFloat = 300,
+        width: CGFloat = 260,
+        height: CGFloat = 320,
         cornerRadius: CGFloat = 26,
         style: CardAnimationStyle = .blobs,
         speed: Double = 0.35,
@@ -87,13 +87,10 @@ public struct AnimatedMusicCard: View {
             // MARK: - Foreground content
             VStack(alignment: .leading, spacing: 10) {
                 HStack(spacing: 8) {
-                    Circle()
-                        .fill(prominentColor)
-                        .frame(width: 8, height: 8)
-
+                    Image(systemName: "applelogo")
+                        .font(.title3)
                     Text("Music")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.white.opacity(0.9))
+                        .font(.title3.weight(.semibold))
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -227,7 +224,6 @@ private struct BlobFieldCanvas: View {
                 )
             }
 
-            // 🔥 NO gloss here for blobs → avoids the mid “edge” feeling
         }
     }
 }
@@ -409,7 +405,7 @@ private struct SparklesCanvas: View {
             footnote: "Portugal. The Man – 7 November",
             colors: [.orange, .red, .purple, .pink],
             prominentColor: .pink,
-            width: 320,
+            width: 260,
             height: 320,
             cornerRadius: 40,
             style: .blobs,
