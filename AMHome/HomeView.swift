@@ -10,7 +10,7 @@ struct HomeView: View {
         MusicItem(title: "SHISH",
                   subtitle: "Portugal. The Man – 7 November",
                   artworkColor: .red),
-        MusicItem(title: "Parham's Station",
+        MusicItem(title: "Parham Mix",
                   subtitle: "Made for You",
                   artworkColor: .pink),
         MusicItem(title: "Late Night Vibes",
@@ -22,12 +22,12 @@ struct HomeView: View {
     ]
 
     private let recentlyPlayed: [MusicItem] = [
-        MusicItem(title: "Energy",       subtitle: "Radio Station", artworkColor: .indigo),
+        MusicItem(title: "Energy",       subtitle: "Radio Station", artworkColor: .green),
         MusicItem(title: "Feel Good",    subtitle: "Radio Station", artworkColor: .yellow),
         MusicItem(title: "Parham Radio", subtitle: "Radio Station", artworkColor: .orange),
         MusicItem(title: "Chill Beats",  subtitle: "Playlist",      artworkColor: .purple),
         MusicItem(title: "Lo-Fi Coding", subtitle: "Playlist",      artworkColor: .mint),
-        MusicItem(title: "Retro Wave",   subtitle: "Playlist",      artworkColor: .green)
+        MusicItem(title: "Retro Wave",   subtitle: "Playlist",      artworkColor: .indigo)
     ]
 
     private let twoThousands: [MusicItem] = [
@@ -40,11 +40,11 @@ struct HomeView: View {
     ]
 
     private let replay: [MusicItem] = [
-        MusicItem(title: "All Time",      subtitle: "Dorcci , Future , Antimatter , A$AP , Travis Scott and more", artworkColor: .pink),
-        MusicItem(title: "'24", subtitle: "Blackfield , Coldplay , Linkin Park , Maroon 5 and more",  artworkColor: .purple),
-        MusicItem(title: "'23",     subtitle: "Leprous , Tamino , Khalid , Billie Eilish , Halsey and more", artworkColor: .orange),
-        MusicItem(title: "'22",    subtitle: " Lord Huron , The Weeknd , Angus & Julia Stone and more", artworkColor: .teal),
-        MusicItem(title: "'21",      subtitle: "Slipknot , Cranberries , Poobon , UFO , Offset and more",    artworkColor: .yellow)
+        MusicItem(title: "All Time",      subtitle: "Dorcci , Future , Antimatter , A$AP Rocky , Travis Scott and more", artworkColor: .pink),
+        MusicItem(title: "'24",           subtitle: "Blackfield , Coldplay , Linkin Park , Maroon 5 and more",          artworkColor: .purple),
+        MusicItem(title: "'23",           subtitle: "Leprous , Tamino , Khalid , Billie Eilish , Halsey and more",      artworkColor: .orange),
+        MusicItem(title: "'22",           subtitle: "Post Malone , Lord Huron , The Weeknd , Angus & Julia Stone and more", artworkColor: .teal),
+        MusicItem(title: "'21",           subtitle: "Slipknot , Cranberries , Poobon , Gunna, UFO , Offset and more",   artworkColor: .yellow)
     ]
 
     private let workout: [MusicItem] = [
@@ -106,7 +106,7 @@ struct HomeView: View {
                             Circle()
                                 .fill(
                                     LinearGradient(
-                                        colors: [.pink, .blue],
+                                        colors: [.pink, .orange],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     )
@@ -123,21 +123,30 @@ struct HomeView: View {
                 .padding(.horizontal)
                 .padding(.top, 12)
 
-                // MARK: Top Picks – animated cards (blobs style)
+                // MARK: Top Picks – animated cards (mixed styles)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Top Picks for You")
                         .font(.title2.bold())
                         .foregroundColor(.white)
                         .padding(.horizontal)
 
-                    Text("New Release")
+                    Text("Made for You")
                         .font(.headline)
                         .foregroundStyle(.secondary)
                         .padding(.horizontal)
 
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 16) {
-                            ForEach(topPicks) { item in
+                            ForEach(Array(topPicks.enumerated()), id: \.offset) { index, item in
+                                // 🔹 Choose style based on index: blobs / waves / sparkles
+                                let style: CardAnimationStyle = {
+                                    switch index % 3 {
+                                    case 0: return .blobs
+                                    case 1: return .waves
+                                    default: return .sparkles
+                                    }
+                                }()
+
                                 NavigationLink {
                                     MixDetailView(mix: item)
                                 } label: {
@@ -147,10 +156,9 @@ struct HomeView: View {
                                         footnote: item.subtitle,
                                         colors: palette(for: item.artworkColor),
                                         prominentColor: item.artworkColor,
-                                        width: 260,
-                                        height: 320,
-                                        cornerRadius: 26,
-                                        style: .blobs
+                                        style: style,
+                                        speed: 0.35,
+                                        intensity: 1.0
                                     )
                                 }
                                 .buttonStyle(.plain)
@@ -162,7 +170,6 @@ struct HomeView: View {
                 }
 
                 // MARK: Horizontal rows (small square cards)
-
                 HorizontalRow(title: "Recently Played", items: recentlyPlayed) { item in
                     player.play(item: item)
                 }
@@ -171,8 +178,7 @@ struct HomeView: View {
                     player.play(item: item)
                 }
 
-                // MARK: Made for You – uses OrganicMixCardView
-
+                // MARK: Replay – OrganicMixCardView
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Replay: Your Top Music")
                         .font(.title2.bold())

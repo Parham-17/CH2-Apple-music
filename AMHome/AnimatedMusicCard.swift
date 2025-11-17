@@ -282,7 +282,7 @@ private struct WavesCanvas: View {
 
                 var p = Path()
                 p.move(to: CGPoint(x: 0, y: size.height * 0.65))
-                let steps = 120
+                let steps = 30
                 for s in 0...steps {
                     let x = CGFloat(s) / CGFloat(steps) * size.width
                     let y = size.height * 0.65
