@@ -35,11 +35,13 @@ struct RootTabView: View {
                 }
             }
 
-            // MARK: Search tab – **no custom label**
+            // MARK: Search tab
             Tab(role: .search) {
                 NavigationStack {
                     SearchView()
                         .navigationTitle("Search")
+                        .tint(.red)
+
                 }
             }
         }
@@ -68,8 +70,12 @@ struct RootTabView: View {
                 player.isPlaying = true
             }
         }
+        .tint(.red)
+
     }
+    
 }
+
 
 #Preview {
     RootTabView()
