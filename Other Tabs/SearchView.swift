@@ -21,8 +21,8 @@ struct SearchView: View {
                         Text(s.rawValue).tag(s)
                     }
                 }
-                .pickerStyle(.segmented)          // <- this is enough for the glass effect
-                .controlSize(.extraLarge)         // matches Apple Music pill height
+                .pickerStyle(.segmented)
+                .controlSize(.extraLarge)
                 .padding(.horizontal)
                 .padding(.top, 10)
 
@@ -46,7 +46,6 @@ struct SearchView: View {
                     }
                     .padding(.horizontal, 24)
                 } else {
-                    // your recent list here
                 }
 
                 Spacer()

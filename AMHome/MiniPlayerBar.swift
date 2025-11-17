@@ -8,12 +8,12 @@ struct MiniPlayerBar: View {
         if let item = player.nowPlaying {
             HStack(spacing: 10) {
 
-                // Artwork (unchanged)
+                // Artwork
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .fill(item.artworkColor)
                     .frame(width: 32, height: 32)
 
-                // Titles (unchanged)
+                // Titles
                 VStack(alignment: .leading, spacing: 2) {
                     Text(item.title)
                         .font(.callout.weight(.semibold))
@@ -28,7 +28,7 @@ struct MiniPlayerBar: View {
 
                 Spacer()
 
-                // 🔹 Play / pause (smaller)
+                // 🔹 Play / pause
                 Button {
                     player.togglePlayPause()
                 } label: {
@@ -38,12 +38,12 @@ struct MiniPlayerBar: View {
                 .buttonStyle(.plain)
                 .padding(.horizontal, 2)
 
-                // 🔹 Next button (smaller)
+                // 🔹 Next button
                 Button {
                     // TODO
                 } label: {
                     Image(systemName: "forward.fill")
-                        .font(.body)          // smaller
+                        .font(.body)
                 }
                 .buttonStyle(.plain)
                 .padding(.trailing, 2)

@@ -36,7 +36,6 @@ struct RootTabView: View {
             }
 
             // MARK: Search tab – **no custom label**
-            // System will turn this into the expanding search bar.
             Tab(role: .search) {
                 NavigationStack {
                     SearchView()
@@ -47,10 +46,10 @@ struct RootTabView: View {
         // 🔍 Global search configuration for the tab bar
         .searchable(
             text: $searchText,
-            placement: .automatic,        // bottom on iPhone
-            prompt: "Apple Music"         // placeholder text in the bar
+            placement: .automatic,
+            prompt: "Apple Music"
         )
-        .searchToolbarBehavior(.minimize) // compact ↔ expanded behavior
+        .searchToolbarBehavior(.minimize)
 
         // 🎵 Mini player above the tab bar
         .tabViewBottomAccessory {
@@ -60,7 +59,6 @@ struct RootTabView: View {
         // Collapses tab bar + accessory on scroll
         .tabBarMinimizeBehavior(.onScrollDown)
         .onAppear {
-            // Demo: ensure something is playing so mini player is visible
             if player.nowPlaying == nil {
                 player.nowPlaying = MusicItem(
                     title: "Radioactive",

@@ -16,8 +16,8 @@ public struct AnimatedMusicCard: View {
     public var height: CGFloat = 320
     public var cornerRadius: CGFloat = 26
     public var style: CardAnimationStyle = .blobs
-    public var speed: Double = 0.35      // global motion speed
-    public var intensity: Double = 1.0   // style-specific “amount”
+    public var speed: Double = 0.35
+    public var intensity: Double = 1.0   
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 

@@ -19,10 +19,8 @@ struct MixDetailView: View {
 
     var body: some View {
         GeometryReader { geo in
-            // Use the SCREEN height so hero size is consistent
-            // (both in preview and when opened from ContentView).
             let screenHeight = UIScreen.main.bounds.height
-            let heroHeight = screenHeight * 0.75   // big hero (≈ 3/4+)
+            let heroHeight = screenHeight * 0.75
 
             ZStack {
                 Color.black.ignoresSafeArea()
@@ -32,7 +30,7 @@ struct MixDetailView: View {
 
                         // MARK: - HERO (animated, scrolls with content)
                         ZStack {
-                            // Animated gradient background
+
                             AnimatedMusicCard(
                                 title: "",
                                 subtitle: "",
@@ -40,7 +38,7 @@ struct MixDetailView: View {
                                 colors: palette(for: mix.artworkColor),
                                 prominentColor: mix.artworkColor,
                                 width: geo.size.width,
-                                height: heroHeight + 200,   // overshoot to avoid hard edge
+                                height: heroHeight + 200,
                                 cornerRadius: 80,
                                 style: .blobs
                             )
@@ -121,7 +119,7 @@ struct MixDetailView: View {
                             }
                             .padding(.horizontal, 24)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-                            .offset(y: -150)   // your working offset
+                            .offset(y: -150)
                         }
                         .frame(height: heroHeight)
                         .clipped()

@@ -38,7 +38,7 @@ struct AccountSheetView: View {
                             .padding(14)
                         }
 
-                        // MARK: Set up Profile (title inside bubble, description outside)
+                        // MARK: Set up Profile info
                         VStack(alignment: .leading, spacing: 8) {
                             GlassGroup {
                                 HStack {
@@ -118,7 +118,7 @@ struct AccountSheetView: View {
     }
 }
 
-// MARK: - Helpers (unchanged glassy containers)
+// MARK: - Helpers
 
 private struct GlassGroup<Content: View>: View {
     @ViewBuilder var content: Content

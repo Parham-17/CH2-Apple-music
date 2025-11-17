@@ -8,7 +8,6 @@ struct MusicItem: Identifiable, Hashable {
     let artworkColor: Color
 }
 
-/// Optional: basic "now playing" info if you ever need it elsewhere.
 struct NowPlaying {
     var title: String
     var artist: String

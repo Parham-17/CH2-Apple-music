@@ -3,7 +3,6 @@ import SwiftUI
 struct OrganicMixCardView: View {
     let item: MusicItem
 
-    // Replay-like size (tweak if you want)
     var width: CGFloat = 260
     var height: CGFloat = 320
 
@@ -21,7 +20,7 @@ struct OrganicMixCardView: View {
 
     var body: some View {
         ZStack {
-            // MARK: - Background shapes (same motion, different colors per card)
+            // MARK: - Background shapes and animations
 
             Circle()
                 .fill(c(0))
@@ -153,7 +152,7 @@ struct OrganicMixCardView: View {
         }
     }
 
-    // MARK: - Palette generator (similar idea to AnimatedMusicCard)
+    // MARK: - Palette generator
 
     private static func palette(for color: Color) -> [Color] {
         switch color {
@@ -170,7 +169,6 @@ struct OrganicMixCardView: View {
         case .blue:
             return [.blue, .indigo, .teal, .mint, .cyan, .blue.opacity(0.7), .indigo.opacity(0.8)]
         default:
-            // fallback “aqua” palette
             return [
                 Color.cyan,
                 Color.blue,

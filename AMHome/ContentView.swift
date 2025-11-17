@@ -11,7 +11,6 @@ struct ContentView: View {
     ContentView()
         .environmentObject({
             let store = PlayerStore()
-            // Demo track so the mini player shows in preview
             store.nowPlaying = MusicItem(
                 title: "Radioactive",
                 subtitle: "Imagine Dragons",
